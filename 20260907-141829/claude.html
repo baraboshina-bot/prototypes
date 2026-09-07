@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Verified Badge — Paywall Redesign</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',-apple-system,sans-serif; }
+  body { background:#05070C; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+  .screen {
+    width:390px; height:844px; background:#0A0D14; position:relative; overflow:hidden;
+    border-radius:0px; display:flex; flex-direction:column; color:#F5F7FA;
+  }
+  /* Status bar */
+  .statusbar { height:34px; display:flex; align-items:center; justify-content:space-between; padding:0 20px; font-size:13px; font-weight:600; color:#F5F7FA; }
+  .topnav { display:flex; justify-content:space-between; align-items:center; padding:6px 18px 0 18px; }
+  .closeBtn { width:30px; height:30px; border-radius:50%; background:#151A26; display:flex; align-items:center; justify-content:center; color:#93A0B8; font-size:15px; }
+  .restoreBtn { font-size:12px; color:#93A0B8; font-weight:500; }
+
+  /* HERO (top third — golden ratio ~322px) */
+  .hero { padding:14px 24px 0 24px; text-align:center; }
+  .avatarWrap { position:relative; width:88px; height:88px; margin:6px auto 10px auto; }
+  .avatar {
+    width:88px; height:88px; border-radius:50%;
+    background:linear-gradient(135deg,#3B9EFF 0%,#8B5CFF 100%);
+    display:flex; align-items:center; justify-content:center;
+    font-size:34px; font-weight:800; color:#fff;
+    box-shadow:0 0 0 3px #0A0D14, 0 0 0 5px #3B9EFF44;
+  }
+  .badge {
+    position:absolute; bottom:2px; right:2px; width:28px; height:28px; border-radius:50%;
+    background:#3B9EFF; border:3px solid #0A0D14; display:flex; align-items:center; justify-content:center;
+  }
+  .handleRow { display:flex; align-items:center; justify-content:center; gap:5px; margin-bottom:2px; }
+  .handle { font-size:16px; font-weight:700; color:#F5F7FA; }
+  .previewTag { font-size:12px; color:#5EF2C0; font-weight:600; margin-bottom:14px; }
+
+  .headline { font-size:24px; line-height:30px; font-weight:800; color:#F5F7FA; margin-bottom:6px; letter-spacing:-0.3px; }
+  .subhead { font-size:14px; line-height:20px; color:#93A0B8; font-weight:400; padding:0 8px; }
+
+  /* Benefits */
+  .benefits { display:flex; gap:10px; padding:16px 24px 0 24px; }
+  .benefitCard { flex:1; background:#141A26; border:1px solid #1F2635; border-radius:14px; padding:12px; }
+  .benefitIcon { width:30px; height:30px; border-radius:9px; background:#3B9EFF1A; display:flex; align-items:center; justify-content:center; margin-bottom:8px; }
+  .benefitTitle { font-size:13px; font-weight:700; color:#F5F7FA; margin-bottom:3px; }
+  .benefitDesc { font-size:11px; line-height:14px; color:#7C879C; }
+
+  /* Pricing */
+  .pricing { padding:14px 24px 0 24px; display:flex; flex-direction:column; gap:9px; }
+  .plan {
+    position:relative; display:flex; align-items:center; justify-content:space-between;
+    background:#141A26; border:1.5px solid #232B3D; border-radius:14px; padding:12px 14px;
+  }
+  .plan.popular {
+    border:1.5px solid #4AF0B0; background:#141F1B;
+    box-shadow:0 0 0 3px #4AF0B01A, 0 8px 20px -8px #4AF0B055;
+    transform:scale(1.02);
+  }
+  .ribbon {
+    position:absolute; top:-10px; right:14px; background:#4AF0B0; color:#0A0D14;
+    font-size:10px; font-weight:800; padding:3px 9px; border-radius:20px; letter-spacing:0.2px;
+  }
+  .planLeft { display:flex; align-items:center; gap:11px; }
+  .radio { width:20px; height:20px; border-radius:50%; border:2px solid #3A4256; flex-shrink:0; }
+  .radio.on { border:2px solid #4AF0B0; background:#4AF0B0; position:relative; }
+  .radio.on::after { content:''; position:absolute; inset:5px; background:#0A0D14; border-radius:50%; }
+  .planName { font-size:14px; font-weight:700; color:#F5F7FA; }
+  .planSub { font-size:11px; color:#7C879C; margin-top:2px; }
+  .planSub.free { color:#4AF0B0; font-weight:600; }
+  .planRight { text-align:right; }
+  .planPrice { font-size:17px; font-weight:800; color:#F5F7FA; }
+  .planPer { font-size:10px; color:#7C879C; }
+  .planTotal { font-size:10px; color:#556077; margin-top:1px; }
+
+  /* Spacer pushes CTA to bottom */
+  .spacer { flex:1; }
+
+  /* Bottom CTA */
+  .bottom { padding:12px 24px 22px 24px; }
+  .timeline { display:flex; align-items:center; gap:6px; margin-bottom:10px; padding:0 2px; }
+  .tlDot { width:6px; height:6px; border-radius:50%; background:#4AF0B0; }
+  .tlLine { flex:1; height:2px; background:#232B3D; }
+  .tlText { font-size:10px; color:#7C879C; white-space:nowrap; }
+  .cta {
+    width:100%; padding:16px; border-radius:16px; background:#4AF0B0; color:#08140F;
+    font-size:16px; font-weight:800; text-align:center; letter-spacing:0.3px;
+    box-shadow:0 10px 24px -8px #4AF0B088;
+  }
+  .fineprint { font-size:10.5px; line-height:14px; color:#5C6579; text-align:center; margin-top:10px; padding:0 6px; }
+</style>
+</head>
+<body>
+<div class="screen">
+  <div class="statusbar"><span>9:30</span><span>●●●▮</span></div>
+  <div class="topnav">
+    <div class="closeBtn">✕</div>
+    <div class="restoreBtn">Восстановить</div>
+  </div>
+
+  <div class="hero">
+    <div class="avatarWrap">
+      <div class="avatar">A</div>
+      <div class="badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0A0D14" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    <div class="handleRow"><span class="handle">@annastudio</span></div>
+    <div class="previewTag">Так вас увидят другие</div>
+    <div class="headline">Станьте проверенным аккаунтом</div>
+    <div class="subhead">Галочка — сигнал доверия в ленте, поиске и комментариях</div>
+  </div>
+
+  <div class="benefits">
+    <div class="benefitCard">
+      <div class="benefitIcon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#3B9EFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="benefitTitle">Галочка везде</div>
+      <div class="benefitDesc">Профиль, лента, комментарии, поиск</div>
+    </div>
+    <div class="benefitCard">
+      <div class="benefitIcon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="#3B9EFF" stroke-width="2.4"/><path d="M20 20l-4-4" stroke="#3B9EFF" stroke-width="2.4" stroke-linecap="round"/></svg></div>
+      <div class="benefitTitle">Выше в поиске</div>
+      <div class="benefitDesc">Проверенные — в топе выдачи</div>
+    </div>
+  </div>
+
+  <div class="pricing">
+    <div class="plan">
+      <div class="planLeft">
+        <div class="radio"></div>
+        <div><div class="planName">1 неделя</div><div class="planSub">Попробовать</div></div>
+      </div>
+      <div class="planRight"><div class="planPrice">$2.49</div><div class="planPer">/ неделя</div></div>
+    </div>
+
+    <div class="plan popular">
+      <div class="ribbon">САМЫЙ ПОПУЛЯРНЫЙ</div>
+      <div class="planLeft">
+        <div class="radio on"></div>
+        <div><div class="planName">1 месяц</div><div class="planSub free">3 дня бесплатно</div></div>
+      </div>
+      <div class="planRight"><div class="planPrice">$6.99</div><div class="planPer">/ месяц</div></div>
+    </div>
+
+    <div class="plan">
+      <div class="planLeft">
+        <div class="radio"></div>
+        <div><div class="planName">3 месяца</div><div class="planSub">Выгода 15% · лучшая цена</div></div>
+      </div>
+      <div class="planRight"><div class="planPrice">$5.99</div><div class="planPer">/ месяц</div><div class="planTotal">$17.99 за 3 мес.</div></div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="bottom">
+    <div class="timeline">
+      <div class="tlDot"></div><div class="tlLine"></div>
+      <div class="tlText">День 3: спишется $6.99</div><div class="tlLine"></div>
+      <div class="tlDot" style="background:#232B3D"></div>
+    </div>
+    <div class="cta">НАЧАТЬ 3 ДНЯ БЕСПЛАТНО</div>
+    <div class="fineprint">Затем $6.99/мес через Google Play. Отменить можно в Google Play в любой момент до окончания пробного периода.</div>
+  </div>
+</div>
+</body>
+</html>
