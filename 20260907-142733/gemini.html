@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Redesign</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #e0e0e0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #333;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .phone-mockup {
+            width: 390px;
+            height: 844px;
+            background-color: #f7f7f7;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            font-size: 13px;
+            color: #cccccc; /* Lighter color for status bar to blend with top dark section */
+            background-color: #121212; /* Dark background for the app's top bar */
+        }
+        .status-bar span {
+            font-weight: 600;
+        }
+        .status-bar div svg {
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        .app-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background-color: #121212;
+            color: #f0f0f0; /* White-ish color for header text */
+            z-index: 1; /* Ensure header is above content if any overlap */
+        }
+        .app-header .back-arrow {
+            width: 24px;
+            height: 24px;
+            margin-right: 16px;
+            color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-header .back-arrow svg {
+            fill: currentColor;
+        }
+        .app-header .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f0f0f0;
+        }
+        .app-content {
+            flex-grow: 1;
+            background-color: #1a1a1a; /* Dark background for the main content area */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align to top */
+            align-items: center;
+            padding: 24px;
+            text-align: center;
+            position: relative; /* For overlay */
+        }
+        .badge-container {
+            margin-top: 40px; /* More space from header */
+            margin-bottom: 24px;
+            position: relative;
+            width: 140px; /* Larger badge */
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Using CSS for a more stylized octagonal shape */
+            clip-path: polygon(50% 0%, 80% 10%, 100% 40%, 100% 60%, 80% 90%, 50% 100%, 20% 90%, 0% 60%, 0% 40%, 20% 10%);
+            background-color: #2e7d32; /* A more vibrant green for the badge */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255,255,255,0.2);
+            transform: rotate(-5deg); /* Subtle rotation for dynamic feel */
+        }
+        .badge-inner {
+            width: 110px;
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #4CAF50; /* Lighter green */
+            clip-path: polygon(50% 0%, 80% 10%, 100% 40%, 100% 60%, 80% 90%, 50% 100%, 20% 90%, 0% 60%, 0% 40%, 20% 10%);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+            transform: rotate(5deg); /* Counter-rotation */
+        }
+        .badge-check {
+            color: #fff;
+            font-size: 72px; /* Larger checkmark */
+            stroke: #fff;
+            stroke-width: 1px;
+        }
+        .badge-message {
+            color: #f0f0f0;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .badge-subtitle {
+            color: #a0a0a0;
+            font-size: 16px;
+            line-height: 1.5;
+            max-width: 280px; /* Limit width for readability */
+        }
+        .bottom-sheet {
+            background-color: #ffffff;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            padding: 24px 20px 32px;
+            box-shadow: 0 -8px 20px rgba(0,0,0,0.1);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-height: 60%; /* To allow more of the top content to show */
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box; /* Include padding in height calculation */
+        }
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            margin: -8px auto 20px;
+        }
+        .sheet-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .sheet-section.subscription-offer {
+            border-bottom: 1px solid #eeeeee;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }
+        .sheet-section.payment-info {
+            border-top: 1px solid #eeeeee; /* Changed to top for better grouping */
+            padding-top: 16px;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+        .sheet-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .sheet-icon.google-play {
+            background-color: #f0f0f0;
+        }
+        .sheet-details {
+            flex-grow: 1;
+            text-align: left;
+        }
+        .sheet-details .title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.4;
+        }
+        .sheet-details .subtitle {
+            font-size: 13px;
+            color: #888;
+        }
+        .sheet-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        .offer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0; /* Reduced padding for compact list */
+        }
+        .offer-row .label {
+            font-size: 15px;
+            color: #333;
+        }
+        .offer-row .sub-label {
+            font-size: 12px;
+            color: #888;
+        }
+        .info-text {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+            margin-top: 20px;
+            text-align: left;
+        }
+        .info-text a {
+            color: #1a73e8; /* Google blue for links */
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .cta-button {
+            background-color: #1e88e5; /* A strong, trustworthy blue like Google's */
+            color: #ffffff;
+            padding: 14px 24px;
+            border-radius: 28px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 24px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+            -webkit-appearance: none; /* Reset for buttons */
+            -moz-appearance: none;
+            appearance: none;
+            border: none;
+        }
+        .cta-button:hover {
+            background-color: #1565c0;
+            box-shadow: 0 6px 16px rgba(30, 136, 229, 0.4);
+        }
+        .cancel-button {
+            color: #888;
+            font-size: 15px;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: none;
+            border: none;
+        }
+        .cancel-button:hover {
+            color: #333;
+        }
+
+        /* SVG Icons for status bar and content */
+        .svg-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .google-play-icon-svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+            display: inline-block;
+        }
+        .mastercard-logo-svg {
+            width: 24px;
+            height: 24px;
+            position: relative;
+        }
+        .mastercard-logo-svg circle:first-child { fill: #eb001b; } /* Red */
+        .mastercard-logo-svg circle:last-child { fill: #ff5f00; mix-blend-mode: multiply; } /* Orange */
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="status-bar">
+            <span>09:30</span>
+            <div>
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm-1 15h2v-6h-2v6zm0-8h2V7h-2v2z"/></svg> <!-- Placeholder for location -->
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg> <!-- Placeholder for WiFi/Signal -->
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M17 4H7C5.89 4 5 4.89 5 6v12c0 1.11.89 2 2 2h10c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zM7 6h10v12H7V6zm8 6c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z"/></svg> <!-- Placeholder for Battery -->
+            </div>
+        </div>
+
+        <div class="app-header">
+            <div class="back-arrow">
+                <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+            </div>
+            <div class="title">Verification</div>
+        </div>
+
+        <div class="app-content">
+            <div class="badge-container">
+                <div class="badge-inner">
+                    <svg class="badge-check" viewBox="0 0 24 24" width="72" height="72"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+            </div>
+            <div class="badge-message">Get verified. Get recognized.</div>
+            <div class="badge-subtitle">Unlock exclusive features and enhance your profile visibility.</div>
+        </div>
+
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+
+            <div class="sheet-section subscription-offer">
+                <div class="sheet-icon google-play">
+                    <svg class="google-play-icon-svg" viewBox="0 0 24 24">
+                        <path fill="#FFC107" d="M2 10.9v2.2L12 18l10-4.9V8l-10 4.9L2 10.9z"/>
+                        <path fill="#4CAF50" d="M2 10.9L12 6l10 4.9-10 4.9L2 10.9z"/>
+                        <path fill="#F44336" d="M12 6L2 1.1V8l10 4.9L12 6z"/>
+                        <path fill="#2196F3" d="M22 8v2.9L12 15.8 2 10.9V8l10 4.9L22 8z"/>
+                    </svg>
+                </div>
+                <div class="sheet-details">
+                    <div class="title">Verification · 1 month</div>
+                    <div class="subtitle">SWIPIX · Google Play</div>
+                </div>
+            </div>
+
+            <div class="offer-row">
+                <div class="label">3 days free</div>
+                <div class="sheet-price">$0.00</div>
+            </div>
+            <div class="offer-row">
+                <div class="label">Subscription</div>
+                <div class="sheet-price">$6.99</div>
+            </div>
+            <div class="offer-row" style="margin-bottom: 0;">
+                <div class="sub-label">Renews every month</div>
+            </div>
+
+            <div class="sheet-section payment-info">
+                <div class="sheet-icon mastercard">
+                    <svg class="mastercard-logo-svg" viewBox="0 0 24 24">
+                        <circle cx="9" cy="12" r="8"/>
+                        <circle cx="15" cy="12" r="8"/>
+                    </svg>
+                </div>
+                <div class="sheet-details">
+                    <div class="title">Mastercard ···· 4417</div>
+                </div>
+            </div>
+
+            <div class="info-text">
+                You won't be charged until <span style="font-weight: 600;">Sep 7</span>. By subscribing you agree to the <a href="#">Google Play Terms of Service</a>. Your subscription renews automatically until you cancel it in Google Play.
+            </div>
+
+            <button class="cta-button">Start free trial</button>
+            <button class="cancel-button">Cancel</button>
+        </div>
+    </div>
+</body>
+</html>

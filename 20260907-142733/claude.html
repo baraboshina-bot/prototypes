@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Verification Paywall — Redesign</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { display:flex; justify-content:center; align-items:center; min-height:100vh; background:#e5e5e5; font-family:'Inter',sans-serif; }
+
+  .screen {
+    width:390px; height:844px; position:relative; overflow:hidden;
+    border-radius:40px;
+    background: radial-gradient(120% 60% at 50% 0%, #142420 0%, #0A0F0D 55%, #07090A 100%);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+    color:#FFFFFF;
+  }
+
+  /* status/back row */
+  .topbar { display:flex; justify-content:space-between; align-items:center; padding:22px 22px 0 22px; }
+  .back-btn { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; font-size:16px; color:#EAF2EF; }
+  .skip-link { font-size:13px; color:#7C8A85; font-weight:500; }
+
+  /* hero */
+  .hero { text-align:center; padding-top:26px; position:relative; }
+  .glow {
+    position:absolute; top:8px; left:50%; transform:translateX(-50%);
+    width:180px; height:180px; border-radius:50%;
+    background: radial-gradient(circle, rgba(20,184,127,0.45) 0%, rgba(20,184,127,0) 70%);
+    filter: blur(2px);
+  }
+  .badge-seal { position:relative; width:96px; height:96px; margin:0 auto; }
+  .badge-seal .layer {
+    position:absolute; inset:0; border-radius:26px;
+    background: linear-gradient(135deg, #22E4A0 0%, #0C8F63 100%);
+    box-shadow: 0 10px 24px rgba(12,143,99,0.45);
+  }
+  .badge-seal .layer.b { transform:rotate(45deg); }
+  .badge-seal svg { position:absolute; inset:0; margin:auto; width:44px; height:44px; z-index:2; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.35)); }
+
+  .eyebrow { margin-top:20px; font-family:'Inter',sans-serif; font-size:11px; font-weight:600; letter-spacing:2px; color:#FFC247; text-transform:uppercase; }
+  .headline { margin-top:8px; font-family:'Poppins',sans-serif; font-weight:700; font-size:30px; line-height:1.15; color:#FFFFFF; }
+  .subheadline { margin-top:8px; font-size:14px; line-height:1.5; color:#9CA8A5; max-width:250px; margin-left:auto; margin-right:auto; }
+
+  .social-proof {
+    margin:16px auto 0 auto; display:inline-flex; align-items:center; gap:6px;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08);
+    padding:6px 14px; border-radius:999px; font-size:12px; color:#C7D1CD; font-weight:500;
+  }
+
+  /* benefits */
+  .benefits { padding:26px 24px 0 24px; display:flex; flex-direction:column; gap:12px; }
+  .benefit-row { display:flex; align-items:center; gap:12px; }
+  .benefit-icon {
+    width:36px; height:36px; border-radius:12px; flex-shrink:0;
+    background:rgba(20,184,127,0.14); border:1px solid rgba(20,184,127,0.25);
+    display:flex; align-items:center; justify-content:center; font-size:16px;
+  }
+  .benefit-text { font-size:14px; font-weight:500; color:#EAF2EF; }
+
+  /* bottom sheet */
+  .cta-panel {
+    position:absolute; left:0; right:0; bottom:0;
+    background:linear-gradient(180deg, rgba(20,26,24,0.0) 0%, #141C1A 18%, #101613 100%);
+    padding:22px 22px 26px 22px;
+    border-top:1px solid rgba(255,255,255,0.06);
+  }
+  .plan-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .plan-left { display:flex; flex-direction:column; }
+  .plan-left .l1 { font-size:13px; font-weight:600; color:#EAF2EF; }
+  .plan-left .l2 { font-size:11.5px; color:#7C8A85; margin-top:2px; }
+  .plan-right { font-size:13px; font-weight:600; color:#7DF0BE; }
+
+  .cta-btn {
+    width:100%; height:54px; border-radius:999px; border:none;
+    background: linear-gradient(90deg, #FFD166 0%, #FFB627 100%);
+    color:#1B1300; font-family:'Poppins',sans-serif; font-weight:600; font-size:17px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow: 0 12px 24px rgba(255,182,39,0.28);
+  }
+  .legal { margin-top:12px; font-size:11px; line-height:1.5; color:#5E6B67; text-align:center; }
+  .not-now { display:block; text-align:center; margin-top:10px; font-size:13px; color:#8A968F; font-weight:500; }
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+  <div class="topbar">
+    <div class="back-btn">←</div>
+    <div class="skip-link">Skip</div>
+  </div>
+
+  <div class="hero">
+    <div class="glow"></div>
+    <div class="badge-seal">
+      <div class="layer a"></div>
+      <div class="layer b"></div>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0A2318" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="eyebrow">Верификация</div>
+    <div class="headline">Получи<br>синюю галочку</div>
+    <div class="subheadline">Выделяйся, вызывай доверие и попадай в топ анкет первым.</div>
+    <div class="social-proof">⭐ 4.8 · 2М+ верифицированных пользователей</div>
+  </div>
+
+  <div class="benefits">
+    <div class="benefit-row">
+      <div class="benefit-icon">✅</div>
+      <div class="benefit-text">Значок верификации в профиле</div>
+    </div>
+    <div class="benefit-row">
+      <div class="benefit-icon">🔥</div>
+      <div class="benefit-text">До 3× больше совпадений</div>
+    </div>
+    <div class="benefit-row">
+      <div class="benefit-icon">👀</div>
+      <div class="benefit-text">Показ первым в ленте анкет</div>
+    </div>
+    <div class="benefit-row">
+      <div class="benefit-icon">🛡️</div>
+      <div class="benefit-text">Больше доверия у реальных людей</div>
+    </div>
+  </div>
+
+  <div class="cta-panel">
+    <div class="plan-row">
+      <div class="plan-left">
+        <div class="l1">3 дня бесплатно</div>
+        <div class="l2">Далее $6.99 / мес · Mastercard ····4417</div>
+      </div>
+      <div class="plan-right">$0.00 сегодня</div>
+    </div>
+    <button class="cta-btn">🔓 Начать бесплатный период</button>
+    <div class="legal">Автопродление $6.99/мес. Отмена в любой момент в Google Play. Списание не раньше 7 сентября.</div>
+    <span class="not-now">Не сейчас</span>
+  </div>
+
+</div>
+
+</body>
+</html>
