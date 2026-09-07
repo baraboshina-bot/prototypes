@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Verification Paywall — Redesign</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  body { display:flex; justify-content:center; background:#e5e5ea; padding:20px 0; font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter',sans-serif; }
+  .screen {
+    width:390px; height:844px; position:relative; overflow:hidden;
+    border-radius:40px; background:#0A0A10; box-shadow:0 20px 60px rgba(0,0,0,.35);
+  }
+  /* status bar */
+  .status { display:flex; justify-content:space-between; align-items:center; padding:16px 24px 0; color:#fff; font-size:13px; font-weight:600; }
+  .status .icons { display:flex; gap:5px; align-items:center; }
+  .status .icons span { width:16px; height:10px; border:1.4px solid #fff; border-radius:2px; opacity:.9; }
+
+  /* nav */
+  .nav { display:flex; justify-content:space-between; align-items:center; padding:14px 20px 0; }
+  .nav .back { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; }
+  .nav .restore { color:rgba(255,255,255,.55); font-size:12.5px; font-weight:600; letter-spacing:.2px; }
+
+  /* hero */
+  .hero {
+    position:relative; height:352px;
+    background:
+      radial-gradient(120% 90% at 50% 30%, rgba(124,92,252,.35) 0%, rgba(124,92,252,0) 60%),
+      linear-gradient(180deg,#15111F 0%, #0A0A10 100%);
+    display:flex; flex-direction:column; align-items:center; padding-top:18px;
+  }
+  .proof-pill {
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+    color:#E8E6F5; font-size:12px; font-weight:600; padding:7px 14px; border-radius:100px;
+    display:flex; align-items:center; gap:6px; margin-bottom:22px;
+  }
+  .proof-pill .dot { width:6px; height:6px; border-radius:50%; background:#4ADE80; box-shadow:0 0 6px #4ADE80; }
+
+  .badge-wrap { position:relative; width:104px; height:104px; margin-bottom:18px; }
+  .badge {
+    width:104px; height:104px; border-radius:32px; transform:rotate(45deg);
+    background:linear-gradient(135deg,#5B7CFA 0%, #A855F7 100%);
+    box-shadow:0 12px 30px rgba(124,92,252,.45);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .badge svg { transform:rotate(-45deg); }
+
+  .headline { color:#FFFFFF; font-size:25px; font-weight:800; text-align:center; line-height:1.2; padding:0 36px; letter-spacing:-.3px; }
+  .headline span { background:linear-gradient(90deg,#8FA6FF,#D9A6FF); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .subhead { color:#A9A6BC; font-size:14px; font-weight:500; text-align:center; margin-top:8px; padding:0 46px; line-height:1.4; }
+
+  /* benefits */
+  .benefits { padding:18px 24px 0; display:flex; flex-direction:column; gap:11px; }
+  .benefit { display:flex; align-items:center; gap:12px; }
+  .benefit .ic {
+    width:30px; height:30px; border-radius:9px; background:rgba(168,85,247,.16);
+    display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;
+  }
+  .benefit .txt { color:#E7E6EF; font-size:13.5px; font-weight:600; }
+  .benefit .txt b { color:#fff; }
+
+  /* sheet */
+  .sheet {
+    position:absolute; bottom:0; left:0; right:0;
+    background:#FFFFFF; border-radius:26px 26px 0 0;
+    padding:14px 22px 26px; box-shadow:0 -10px 40px rgba(0,0,0,.25);
+  }
+  .grabber { width:36px; height:4px; background:#E2E2E8; border-radius:3px; margin:0 auto 14px; }
+
+  .trial-row { display:flex; justify-content:space-between; align-items:baseline; }
+  .trial-row .l { font-size:12.5px; font-weight:700; color:#8A8A99; text-transform:uppercase; letter-spacing:.4px; }
+  .price-big { font-size:32px; font-weight:800; color:#14141B; letter-spacing:-.5px; margin-top:2px; }
+  .price-sub { font-size:12.5px; color:#8A8A99; font-weight:500; margin-top:2px; }
+
+  .cta {
+    margin-top:16px; width:100%; border:none; border-radius:16px; padding:16px 0;
+    background:linear-gradient(90deg,#FF6B6B,#FF9A52);
+    color:#fff; font-size:16px; font-weight:800; letter-spacing:.2px;
+    box-shadow:0 10px 24px rgba(255,107,107,.35);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+
+  .fine { font-size:11px; color:#A6A6B2; text-align:center; margin-top:12px; line-height:1.45; padding:0 4px; }
+  .fine a { color:#7C5CFC; font-weight:700; text-decoration:none; }
+
+  .maybe { text-align:center; margin-top:12px; font-size:13px; font-weight:700; color:#8A8A99; }
+</style>
+</head>
+<body>
+<div class="screen">
+  <div class="status">
+    <span>09:30</span>
+    <div class="icons"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="nav">
+    <div class="back">←</div>
+    <div class="restore">Восстановить покупку</div>
+  </div>
+
+  <div class="hero">
+    <div class="proof-pill"><span class="dot"></span>2 318 верификаций за 24 часа</div>
+    <div class="badge-wrap">
+      <div class="badge">
+        <svg width="42" height="42" viewBox="0 0 24 24" fill="none">
+          <path d="M5 13l4 4 10-10" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="headline">Получи <span>галочку</span>.<br>Тебя заметят первым.</div>
+    <div class="subhead">Верифицированные анкеты получают в 3 раза больше показов в ленте свайпов</div>
+  </div>
+
+  <div class="benefits">
+    <div class="benefit"><div class="ic">⭐</div><div class="txt">Приоритет в <b>Discover</b> — анкета выше в ленте</div></div>
+    <div class="benefit"><div class="ic">🛡️</div><div class="txt"><b>Галочка доверия</b> — меньше отказов при свайпе</div></div>
+    <div class="benefit"><div class="ic">📈</div><div class="txt">В среднем <b>+3× просмотров</b> профиля за неделю</div></div>
+  </div>
+
+  <div class="sheet">
+    <div class="grabber"></div>
+    <div class="trial-row">
+      <div>
+        <div class="l">3 дня бесплатно</div>
+        <div class="price-big">$0.00 сегодня</div>
+        <div class="price-sub">далее $6.99 / месяц, отмена в любой момент</div>
+      </div>
+    </div>
+    <button class="cta">🔒 Начать бесплатный период</button>
+    <div class="fine">Оплата через Google Play · Mastercard •••• 4417.<br>Первое списание $6.99 — 7 сентября. <a href="#">Условия подписки</a></div>
+    <div class="maybe">Может быть позже</div>
+  </div>
+</div>
+</body>
+</html>
