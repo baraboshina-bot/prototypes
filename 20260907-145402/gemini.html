@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You're Verified!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0A192F 0%, #1A2A44 100%);
+            color: #FFFFFF;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+        }
+        .container {
+            width: 390px;
+            height: 844px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 24px;
+            box-sizing: border-box;
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0A192F 0%, #1A2A44 100%);
+        }
+
+        .header {
+            width: 100%;
+            height: 24px;
+            position: absolute;
+            top: 20px;
+            left: 0;
+            padding: 0 24px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .close-button {
+            background: none;
+            border: none;
+            color: #B0C1D6;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        .close-button:hover {
+            opacity: 1;
+        }
+
+        .badge-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex-grow: 1;
+            justify-content: center;
+            padding-top: 50px;
+            transform: translateY(-20px);
+        }
+
+        .badge-icon {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 24px;
+            position: relative;
+            animation: badgeIn 0.8s ease-out forwards;
+        }
+
+        .badge-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 15px rgba(0, 217, 204, 0.6));
+            position: absolute;
+            top: 0; left: 0;
+            animation: glowPulse 2s infinite alternate ease-in-out;
+        }
+        @keyframes glowPulse {
+            0% { filter: drop-shadow(0 0 15px rgba(0, 217, 204, 0.6)) }
+            100% { filter: drop-shadow(0 0 25px rgba(0, 217, 204, 0.8)) }
+        }
+
+        .badge-svg .shape {
+            fill: url(#gradient-badge);
+        }
+        .badge-svg .checkmark {
+            fill: #E0E0E0;
+        }
+
+        @keyframes badgeIn {
+            from {
+                transform: scale(0.5) translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 38px;
+            font-weight: 700;
+            color: #FFFFFF;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            animation: fadeInText 1s ease-out forwards 0.3s;
+            opacity: 0;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            font-weight: 600;
+            color: #00D9CC;
+            margin-bottom: 24px;
+            animation: fadeInText 1s ease-out forwards 0.5s;
+            opacity: 0;
+        }
+
+        .description {
+            font-size: 16px;
+            font-weight: 400;
+            color: #B0C1D6;
+            line-height: 1.5;
+            text-align: center;
+            max-width: 300px;
+            margin-bottom: 40px;
+            animation: fadeInText 1s ease-out forwards 0.7s;
+            opacity: 0;
+        }
+
+        @keyframes fadeInText {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .cta-button {
+            width: 100%;
+            max-width: 342px;
+            height: 56px;
+            background: linear-gradient(90deg, #00D9CC 0%, #00B0FF 100%);
+            border: none;
+            border-radius: 28px;
+            color: #0A192F;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 8px 20px rgba(0, 217, 204, 0.4);
+            animation: fadeInText 1s ease-out forwards 0.9s;
+            opacity: 0;
+            margin-bottom: 20px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(0, 217, 204, 0.5);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(0, 217, 204, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="close-button">✕</button>
+        </div>
+
+        <div class="badge-section">
+            <div class="badge-icon">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="badge-svg">
+                    <defs>
+                        <linearGradient id="gradient-badge" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00D9CC"/>
+                            <stop offset="100%" stop-color="#00B0FF"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="10" y="10" width="80" height="80" rx="20" fill="url(#gradient-badge)"/>
+                    <path class="checkmark" d="M72.91 38.08L45.41 65.58L28.91 49.08L22.91 55.08L45.41 77.58L78.91 44.08L72.91 38.08Z" />
+                </svg>
+            </div>
+            <h1>Поздравляем!<br>Вы верифицированы</h1>
+            <p class="subtitle">Бесплатно на 3 дня</p>
+            <p class="description">Ваш значок уже отображается в профиле, ленте и комментариях — и ваш аккаунт теперь ранжируется выше в поиске людей.</p>
+        </div>
+
+        <button class="cta-button">ПОСМОТРЕТЬ МОЙ ПРОФИЛЬ</button>
+    </div>
+</body>
+</html>
