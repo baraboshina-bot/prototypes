@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Verification Paywall Redesign</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  body { display:flex; justify-content:center; align-items:center; background:#e5e5e5; font-family: 'Poppins','Inter',-apple-system,BlinkMacSystemFont,sans-serif; }
+
+  .phone {
+    width:390px; height:844px; position:relative; overflow:hidden;
+    background: radial-gradient(120% 60% at 50% 0%, #16233a 0%, #0A0E17 55%), linear-gradient(180deg,#0A0E17 0%, #0D1220 100%);
+    border-radius:0px; display:flex; flex-direction:column;
+  }
+
+  /* status bar */
+  .status { display:flex; justify-content:space-between; align-items:center; padding:14px 22px 0; color:#fff; font-size:13px; font-weight:600;}
+  .status .icons { display:flex; gap:5px; align-items:center; font-size:12px; }
+
+  /* header */
+  .header { display:flex; align-items:center; justify-content:space-between; padding:14px 18px 0; }
+  .close-btn { width:32px; height:32px; border-radius:50%; background:#1A2233; display:flex; align-items:center; justify-content:center; color:#9AA4B2; font-size:16px; font-weight:600; }
+  .header-label { color:#6E7887; font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; }
+  .header-spacer { width:32px; }
+
+  .scroll { flex:1; overflow-y:auto; padding-bottom:12px; }
+  .scroll::-webkit-scrollbar{display:none;}
+
+  /* hero */
+  .hero { position:relative; display:flex; flex-direction:column; align-items:center; padding-top:14px; }
+  .glow { position:absolute; top:-20px; width:220px; height:220px; border-radius:50%;
+    background: radial-gradient(circle, rgba(47,230,217,0.35) 0%, rgba(47,230,217,0) 70%); filter:blur(2px); }
+
+  .seal-wrap { position:relative; width:104px; height:104px; margin-top:6px; }
+  .seal { position:absolute; inset:0; border-radius:22px;
+    background: linear-gradient(135deg,#3DF2E4 0%, #1FA8D6 60%, #1B6FB8 100%);
+    box-shadow: 0 8px 24px rgba(31,168,214,0.45), inset 0 2px 4px rgba(255,255,255,0.35);
+  }
+  .seal.r2 { transform: rotate(45deg); }
+  .seal-check { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:2; }
+
+  .rating-pill { margin-top:14px; display:flex; align-items:center; gap:6px; background:#141B2B; border:1px solid #263049;
+    padding:6px 12px; border-radius:20px; color:#C7D0DC; font-size:11.5px; font-weight:600; }
+
+  .headline { margin-top:16px; text-align:center; color:#F5F7FA; font-size:26px; line-height:32px; font-weight:800; padding:0 28px; letter-spacing:-0.3px; }
+  .accent-word { color:#3DF2E4; }
+  .subtitle { margin-top:8px; text-align:center; color:#9AA4B2; font-size:14px; line-height:20px; padding:0 34px; font-weight:400; }
+
+  /* preview card */
+  .preview-card { margin:18px 20px 0; background:#141B2B; border:1px solid #232E44; border-radius:16px; padding:12px 14px;
+    display:flex; align-items:center; gap:10px; }
+  .avatar { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#7C6CF0,#4E7CF6); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:14px; flex-shrink:0; }
+  .preview-text { flex:1; }
+  .preview-name { display:flex; align-items:center; gap:4px; color:#F5F7FA; font-size:13.5px; font-weight:700; }
+  .preview-sub { color:#8792A2; font-size:11.5px; margin-top:2px; }
+  .preview-tag { background:#233049; color:#7FE9E1; font-size:10px; font-weight:700; padding:5px 8px; border-radius:8px; letter-spacing:0.04em; }
+
+  /* benefits */
+  .benefits { margin:18px 20px 0; display:flex; flex-direction:column; gap:12px; }
+  .benefit-row { display:flex; gap:12px; align-items:flex-start; }
+  .benefit-ico { width:34px; height:34px; border-radius:10px; background:#152233; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+  .benefit-title { color:#F0F3F7; font-size:14px; font-weight:700; }
+  .benefit-desc { color:#8792A2; font-size:12.5px; margin-top:2px; line-height:17px; }
+
+  /* pricing */
+  .price-card { margin:20px 20px 0; background:linear-gradient(135deg,#152233,#101929); border:1.5px solid #2FE6D9; border-radius:16px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; }
+  .price-left .plan-name { color:#F5F7FA; font-size:14px; font-weight:700; }
+  .price-left .plan-sub { color:#8792A2; font-size:12px; margin-top:3px; }
+  .price-right { text-align:right; }
+  .price-right .free { color:#3DF2E4; font-size:15px; font-weight:800; }
+  .price-right .then { color:#6E7887; font-size:11px; margin-top:2px; }
+
+  /* footer / CTA */
+  .footer { padding:14px 20px 22px; background:linear-gradient(180deg, rgba(10,14,23,0) 0%, #0A0E17 30%); }
+  .cta { width:100%; height:52px; border-radius:16px; background:#2FE6D9; color:#06222A; font-size:16px; font-weight:800;
+    display:flex; align-items:center; justify-content:center; letter-spacing:0.01em; box-shadow:0 10px 24px rgba(47,230,217,0.3); }
+  .fineprint { text-align:center; color:#6E7887; font-size:11px; margin-top:10px; line-height:16px; }
+  .links-row { display:flex; justify-content:center; gap:14px; margin-top:8px; }
+  .links-row a { color:#586173; font-size:10.5px; text-decoration:underline; }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <div class="status">
+      <span>09:30</span>
+      <div class="icons">
+        <span>••••</span><span>📶</span><span>🔋</span>
+      </div>
+    </div>
+
+    <div class="header">
+      <div class="close-btn">✕</div>
+      <div class="header-label">Verification</div>
+      <div class="header-spacer"></div>
+    </div>
+
+    <div class="scroll">
+      <div class="hero">
+        <div class="glow"></div>
+        <div class="seal-wrap">
+          <div class="seal"></div>
+          <div class="seal r2"></div>
+          <div class="seal-check">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+              <path d="M5 13l4 4L19 7" stroke="#06222A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="rating-pill">⭐ 4.8 &nbsp;·&nbsp; Trusted by 500K+ creators</div>
+        <div class="headline">Get verified.<br>Get <span class="accent-word">discovered</span>.</div>
+        <div class="subtitle">Verified creators rank higher in Search & Discover — viewers trust the badge instantly.</div>
+      </div>
+
+      <div class="preview-card">
+        <div class="avatar">AS</div>
+        <div class="preview-text">
+          <div class="preview-name">@annastudio <span>✅</span></div>
+          <div class="preview-sub">This is how your profile will look</div>
+        </div>
+        <div class="preview-tag">LIVE PREVIEW</div>
+      </div>
+
+      <div class="benefits">
+        <div class="benefit-row">
+          <div class="benefit-ico">🔎</div>
+          <div>
+            <div class="benefit-title">Priority in search</div>
+            <div class="benefit-desc">Verified profiles are ranked above others in People search and Discover.</div>
+          </div>
+        </div>
+        <div class="benefit-row">
+          <div class="benefit-ico">🛡️</div>
+          <div>
+            <div class="benefit-title">Instant trust from viewers</div>
+            <div class="benefit-desc">No documents needed — the badge tells people the creator is real.</div>
+          </div>
+        </div>
+        <div class="benefit-row">
+          <div class="benefit-ico">📈</div>
+          <div>
+            <div class="benefit-title">More profile visits</div>
+            <div class="benefit-desc">Verified creators see up to 3x more profile views on average.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="price-left">
+          <div class="plan-name">3-day free trial</div>
+          <div class="plan-sub">Then $9.99/month · cancel anytime</div>
+        </div>
+        <div class="price-right">
+          <div class="free">$0 today</div>
+          <div class="then">renews after trial</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="cta">Start free trial</div>
+      <div class="fineprint">No payment due now. Cancel anytime before day 3.</div>
+      <div class="links-row">
+        <a href="#">Restore purchase</a>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

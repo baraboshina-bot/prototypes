@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Redesign</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #10062C;
+            --bg-gradient-end: #0B011D;
+            --primary-text: #FFFFFF;
+            --secondary-text: #A7A6B0;
+            --accent-blue: #00E4C0;
+            --card-bg: #1B113B;
+            --button-text: #0B011D;
+            --border-color: #382A5C;
+            --system-icon: #FFFFFF;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #000;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 36px;
+            overflow: hidden;
+            box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 24px;
+            color: var(--system-icon);
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .status-bar .time {
+            font-weight: 700;
+        }
+
+        .status-bar .icons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header .back-arrow {
+            width: 24px;
+            height: 24px;
+            color: var(--primary-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header .title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--primary-text);
+            flex-grow: 1;
+            text-align: center;
+            margin-right: 24px; /* Balance the back arrow */
+        }
+
+        .content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .verification-badge {
+            width: 120px;
+            height: 120px;
+            margin: 32px auto 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3), inset 0px 0px 8px rgba(255, 255, 255, 0.1);
+            border-radius: 50%; /* for a softer look, could be octagonal */
+            background: radial-gradient(circle at 50% 50%, #00E4C0 0%, #00C8A8 100%);
+        }
+        .verification-badge svg {
+            filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .hero-section h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-text);
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .hero-section p {
+            font-size: 15px;
+            color: var(--secondary-text);
+            line-height: 1.5;
+            margin-top: 12px;
+            padding: 0 16px;
+        }
+
+        .try-free-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            text-align: center;
+            margin-top: 24px;
+            cursor: pointer;
+        }
+
+        .profile-preview-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            margin-top: 32px;
+            border: 1px solid var(--border-color);
+        }
+
+        .profile-preview-card .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #C4C4C4; /* Placeholder color */
+            margin-right: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px; /* For emoji */
+        }
+
+        .profile-preview-card .info {
+            flex-grow: 1;
+        }
+
+        .profile-preview-card .info .username {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-text);
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-preview-card .info .username svg {
+            margin-left: 6px;
+            width: 16px;
+            height: 16px;
+            fill: var(--accent-blue);
+        }
+
+        .profile-preview-card .info .description {
+            font-size: 13px;
+            color: var(--secondary-text);
+            margin-top: 4px;
+        }
+
+        .profile-preview-card .preview-button {
+            background-color: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 8px 16px;
+            color: var(--primary-text);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 16px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 24px; /* Adjusted margin */
+        }
+
+        .benefit-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .benefit-card .icon-container {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background-color: rgba(0, 228, 192, 0.15); /* Light accent blue */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .benefit-card .icon-container svg {
+            fill: var(--accent-blue);
+        }
+
+        .benefit-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 0;
+        }
+
+        .benefit-card p {
+            font-size: 13px;
+            color: var(--secondary-text);
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .cta-bottom-bar {
+            padding: 16px 24px 34px; /* Adjust padding for iPhone bottom safe area */
+            background: linear-gradient(180deg, rgba(16, 6, 44, 0) 0%, rgba(16, 6, 44, 0.8) 20%, var(--bg-gradient-end) 100%);
+            backdrop-filter: blur(8px);
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            margin-top: auto; /* Push to bottom */
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .main-cta {
+            width: 100%;
+            padding: 16px 20px;
+            background-color: var(--accent-blue);
+            border: none;
+            border-radius: 14px;
+            color: var(--button-text);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0px 8px 16px rgba(0, 228, 192, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .main-cta:active {
+            transform: translateY(1px);
+            box-shadow: 0px 6px 12px rgba(0, 228, 192, 0.2);
+        }
+
+        /* Icons */
+        .icon-wifi {
+            transform: rotate(45deg);
+            display: inline-block;
+        }
+        .icon-battery {
+            display: inline-block;
+            width: 20px;
+            height: 10px;
+            border: 1px solid var(--system-icon);
+            border-radius: 2px;
+            position: relative;
+            padding: 1px;
+        }
+        .icon-battery::before {
+            content: '';
+            display: block;
+            width: 14px;
+            height: 6px;
+            background-color: var(--system-icon);
+            border-radius: 1px;
+        }
+        .icon-battery::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            right: -3px;
+            width: 2px;
+            height: 6px;
+            background-color: var(--system-icon);
+            border-radius: 0 1px 1px 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span class="time">09:30</span>
+            <div class="icons">
+                <span>📶</span>
+                <span>LTE</span>
+                <span class="icon-battery"></span>
+            </div>
+        </div>
+
+        <div class="header">
+            <span class="back-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            <span class="title">Верификация</span>
+        </div>
+
+        <div class="content-area">
+            <div class="verification-badge">
+                <svg width="60" height="40" viewBox="0 0 60 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M57.6917 4.14481C58.5539 5.00693 58.5539 6.38289 57.6917 7.24501L22.6917 42.245C21.8296 43.1071 20.4536 43.1071 19.5915 42.245L2.30825 24.9617C1.44613 24.0996 1.44613 22.7236 2.30825 21.8615C3.17037 21.0003 4.54633 21.0003 5.40845 21.8615L21.1416 37.5947L54.5915 4.14481C55.4536 3.28269 56.8296 3.28269 57.6917 4.14481Z" fill="#FFFFFF"/>
+                </svg>
+            </div>
+
+            <div class="hero-section">
+                <h1>Get the badge.<br>Get found.</h1>
+                <p>Verified creators rank higher in People search and Discover — and viewers see at a glance that the account is real.</p>
+                <div class="try-free-text">Попробуйте БЕСПЛАТНО на 3 дня</div>
+            </div>
+
+            <div class="profile-preview-card">
+                <div class="avatar">
+                    <img src="data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23C4C4C4'/%3E%3Cpath d='M34 29C34 26.2386 31.7614 24 29 24H19C16.2386 24 14 26.2386 14 29V32H34V29Z' fill='%237D7D7D'/%3E%3Ccircle cx='24' cy='19' r='5' fill='%237D7D7D'/%3E%3C/svg%3E" alt="Avatar" style="width:100%; height:100%; border-radius:50%; object-fit: cover;">
+                </div>
+                <div class="info">
+                    <span class="username">
+                        @annastudio
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"/>
+                        </svg>
+                    </span>
+                    <span class="description">Так будет выглядеть ваш профиль</span>
+                </div>
+                <button class="preview-button">Предпросмотр</button>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="icon-container">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1ZM12 19.96C8.07 19.5 5 15.65 5 11.1V6.2L12 3.1L19 6.2V11.1C19 15.65 15.93 19.5 12 19.96Z"/>
+                        </svg>
+                    </div>
+                    <h3>Приоритет в поиске</h3>
+                    <p>Верифицированные профили выводятся выше остальных в People search и Discover.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon-container">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 1C5.93 1 1 5.93 1 12C1 18.07 5.93 23 12 23C18.07 23 23 18.07 23 12C23 5.93 18.07 1 12 1ZM12 4C14.76 4 17 6.24 17 9C17 11.76 14.76 14 12 14C9.24 14 7 11.76 7 9C7 6.24 9.24 4 12 4ZM12 20.3C8.1 20.3 4.8 17.65 4.02 14.15C5.07 13.06 6.54 12.3 8 12.3C9.46 12.3 10.93 13.06 12 14.15C13.07 13.06 14.54 12.3 16 12.3C17.46 12.3 18.93 13.06 19.98 14.15C19.2 17.65 15.9 20.3 12 20.3Z"/>
+                        </svg>
+                    </div>
+                    <h3>Доверие зрителей</h3>
+                    <p>Никаких документов. Значок говорит людям, что создатель видео реален.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-bottom-bar">
+            <button class="main-cta">Начать 3 дня БЕСПЛАТНО</button>
+        </div>
+    </div>
+</body>
+</html>
