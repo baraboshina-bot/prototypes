@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verification — Redesign</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  html,body {
+    height:100%;
+    background:#E9EBEE;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  }
+  .phone {
+    width:390px;
+    height:844px;
+    background:linear-gradient(180deg,#0A0D14 0%,#0C1019 55%,#0A0D14 100%);
+    border-radius:44px;
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 30px 60px rgba(0,0,0,0.35);
+    display:flex;
+    flex-direction:column;
+    color:#FFFFFF;
+  }
+
+  /* status bar */
+  .statusbar { display:flex; justify-content:space-between; align-items:center; padding:16px 24px 4px; font-size:13px; font-weight:600; color:#FFFFFF; }
+  .statusbar .icons { display:flex; gap:5px; align-items:center; font-size:12px; }
+
+  /* nav */
+  .nav { display:flex; align-items:center; justify-content:space-between; padding:8px 16px 0; }
+  .nav .back { width:32px; height:32px; border-radius:16px; background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; font-size:16px; color:#E7ECEF; }
+  .nav .restore { font-size:12px; color:#7C8896; font-weight:600; }
+
+  .content { flex:1; overflow:hidden; padding:6px 20px 0; display:flex; flex-direction:column; }
+
+  /* hero */
+  .hero { text-align:center; padding-top:8px; }
+  .badge-wrap { position:relative; width:88px; height:88px; margin:0 auto 14px; filter:drop-shadow(0 8px 20px rgba(61,219,217,0.35)); }
+  .badge-wrap .sq { position:absolute; inset:0; border-radius:20px; background:linear-gradient(135deg,#8CF3E8 0%,#22B8C9 100%); }
+  .badge-wrap .sq.r2 { transform:rotate(45deg); }
+  .badge-wrap svg { position:absolute; inset:0; margin:auto; }
+
+  .hero h1 { font-size:26px; font-weight:800; line-height:1.18; letter-spacing:-0.4px; color:#FFFFFF; }
+  .hero p { font-size:14px; line-height:1.45; color:#9AA7B4; margin-top:10px; padding:0 6px; }
+
+  /* preview card */
+  .preview-card {
+    margin-top:18px;
+    background:#141924;
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius:16px;
+    padding:12px 14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .preview-card .avatar {
+    width:38px; height:38px; border-radius:50%;
+    background:linear-gradient(135deg,#F0A6C2,#8E7CF0);
+    flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:700; color:#1A1024;
+  }
+  .preview-card .info { flex:1; min-width:0; }
+  .preview-card .name-row { display:flex; align-items:center; gap:4px; }
+  .preview-card .name-row span.name { font-size:14px; font-weight:700; color:#FFFFFF; }
+  .preview-card .caption { font-size:11.5px; color:#7C8896; margin-top:2px; }
+  .preview-card .tag { font-size:10.5px; font-weight:700; color:#22B8C9; background:rgba(61,219,217,0.12); padding:5px 10px; border-radius:20px; white-space:nowrap; }
+
+  /* benefits */
+  .benefits { margin-top:16px; display:flex; flex-direction:column; gap:10px; }
+  .benefit-row { display:flex; align-items:flex-start; gap:12px; background:#12161F; border-radius:14px; padding:12px 14px; }
+  .benefit-row .icon { width:32px; height:32px; border-radius:10px; background:rgba(61,219,217,0.14); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+  .benefit-row .txt .t { font-size:14px; font-weight:700; color:#FFFFFF; }
+  .benefit-row .txt .d { font-size:12px; color:#8792A0; line-height:1.35; margin-top:2px; }
+
+  /* price */
+  .price-line { text-align:center; font-size:12.5px; color:#8792A0; margin-top:14px; }
+  .price-line b { color:#DDEFEE; font-weight:700; }
+
+  /* CTA */
+  .cta-area { margin-top:auto; padding:14px 20px 22px; background:linear-gradient(180deg,rgba(10,13,20,0) 0%,#0A0D14 30%); }
+  .cta-btn {
+    width:100%; border:none; border-radius:16px; padding:16px 0;
+    background:linear-gradient(135deg,#7FF0E4,#2FD0CE);
+    color:#052024; font-size:16px; font-weight:800; letter-spacing:0.2px;
+    box-shadow:0 10px 24px rgba(47,208,206,0.35);
+  }
+  .fine-print { text-align:center; font-size:11.5px; color:#6E7A87; margin-top:9px; }
+  .legal-links { text-align:center; font-size:10.5px; color:#4E5964; margin-top:6px; }
+  .legal-links span { text-decoration:underline; margin:0 4px; }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="statusbar">
+    <span>09:30</span>
+    <div class="icons"><span>▂▄▆</span><span>📶</span><span>🔋</span></div>
+  </div>
+
+  <div class="nav">
+    <div class="back">‹</div>
+    <div class="restore">Restore</div>
+  </div>
+
+  <div class="content">
+    <div class="hero">
+      <div class="badge-wrap">
+        <div class="sq r1"></div>
+        <div class="sq r2"></div>
+        <svg width="88" height="88" viewBox="0 0 88 88">
+          <path d="M28 45 L40 57 L61 32" stroke="#052024" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <h1>Get the badge.<br>Get found.</h1>
+      <p>Verified creators rank higher in search and Discover — viewers know at a glance the account is real.</p>
+    </div>
+
+    <div class="preview-card">
+      <div class="avatar">AS</div>
+      <div class="info">
+        <div class="name-row"><span class="name">@annastudio</span>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l2.4 2.1 3.2-.4 1 3.1 3 1.3-.6 3.2 1.9 2.7-1.9 2.7.6 3.2-3 1.3-1 3.1-3.2-.4L12 27l-2.4-2.1-3.2.4-1-3.1-3-1.3.6-3.2L1.1 15l1.9-2.7-.6-3.2 3-1.3 1-3.1 3.2.4L12 2z" fill="#2FD0CE" transform="scale(0.8) translate(2,2)"/><path d="M8.5 12.2l2.4 2.4 4.6-4.6" stroke="#052024" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="caption">This is how your profile will look</div>
+      </div>
+      <div class="tag">PREVIEW</div>
+    </div>
+
+    <div class="benefits">
+      <div class="benefit-row">
+        <div class="icon">✅</div>
+        <div class="txt"><div class="t">Badge everywhere</div><div class="d">Profile, feed, comments and search — your name always carries the check.</div></div>
+      </div>
+      <div class="benefit-row">
+        <div class="icon">🔎</div>
+        <div class="txt"><div class="t">Priority in search & Discover</div><div class="d">Verified profiles rank above everyone else.</div></div>
+      </div>
+      <div class="benefit-row">
+        <div class="icon">🛡️</div>
+        <div class="txt"><div class="t">Fewer impersonators</div><div class="d">Viewers instantly trust it's really you.</div></div>
+      </div>
+    </div>
+
+    <div class="price-line">3 days free, then <b>$9.99/month</b> · Cancel anytime</div>
+  </div>
+
+  <div class="cta-area">
+    <button class="cta-btn">Start 3 Days Free</button>
+    <div class="fine-print">No charge today · Cancel in Settings before day 3</div>
+    <div class="legal-links"><span>Terms</span>·<span>Privacy</span></div>
+  </div>
+</div>
+
+</body>
+</html>
