@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, height=844">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',-apple-system,sans-serif; }
+  html,body {
+    width:390px; height:844px; overflow:hidden;
+    background:#0A0E17;
+  }
+  .screen {
+    width:390px; height:844px; position:relative;
+    background:#0A0E17; color:#FFFFFF;
+    display:flex; flex-direction:column;
+  }
+
+  /* Status bar */
+  .status {
+    height:28px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 20px; font-size:13px; font-weight:600; color:#FFFFFF; flex-shrink:0;
+  }
+  .status .icons { display:flex; gap:5px; align-items:center; font-size:11px; }
+
+  /* Top wallet bar */
+  .topbar {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px 4px 16px; flex-shrink:0;
+  }
+  .wallet-chips { display:flex; gap:8px; }
+  .chip {
+    display:flex; align-items:center; gap:5px;
+    background:#141B29; border:1px solid #232D3F;
+    border-radius:20px; padding:6px 12px; font-size:13px; font-weight:700;
+  }
+  .chip .dot { width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; }
+  .dot.coin { background:linear-gradient(135deg,#2DE1C2,#1F9E86); color:#04241D; }
+  .dot.boost { background:linear-gradient(135deg,#FF9A5A,#FF6B57); color:#2B0E08; }
+  .withdraw-btn {
+    background:transparent; border:1.5px solid #2B3446; color:#E7ECF3;
+    padding:7px 14px; border-radius:20px; font-size:12.5px; font-weight:700;
+    letter-spacing:0.2px;
+  }
+
+  .content { flex:1; overflow-y:auto; padding:14px 16px 90px 16px; }
+  .content::-webkit-scrollbar{display:none;}
+
+  /* Hero verified card */
+  .hero {
+    position:relative; overflow:hidden;
+    background:linear-gradient(135deg,#1BC9A8 0%, #0F8F76 55%, #0A6B57 100%);
+    border-radius:20px; padding:18px; margin-top:10px;
+    box-shadow:0 12px 28px rgba(15,143,118,0.35);
+  }
+  .hero-badge {
+    position:absolute; top:14px; right:14px;
+    width:54px; height:54px; border-radius:50%;
+    background:rgba(255,255,255,0.14); border:1.5px solid rgba(255,255,255,0.35);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hero-eyebrow {
+    display:inline-block; background:rgba(255,255,255,0.22); color:#EFFFFB;
+    font-size:11px; font-weight:800; letter-spacing:0.4px; text-transform:uppercase;
+    padding:3px 9px; border-radius:8px; margin-bottom:10px;
+  }
+  .hero h1 { font-size:22px; font-weight:800; line-height:1.15; max-width:230px; }
+  .hero p { font-size:13px; color:#DFFBF3; margin-top:6px; max-width:230px; line-height:1.4; }
+  .hero .price-row { margin-top:14px; display:flex; align-items:baseline; gap:6px; }
+  .hero .price-row .free { font-size:15px; font-weight:800; color:#FFFFFF; }
+  .hero .price-row .then { font-size:12px; color:#CDF5EC; }
+  .hero-cta {
+    margin-top:14px; width:100%; background:#04241D; color:#3DF2C9;
+    border:none; padding:13px; border-radius:14px; font-size:15px; font-weight:800;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+
+  /* Savings strip */
+  .savings {
+    display:flex; align-items:center; gap:10px; margin-top:12px;
+    background:#141B29; border:1px solid #232D3F; border-radius:14px; padding:11px 12px;
+  }
+  .savings .ic { width:26px; height:26px; border-radius:8px; background:#1F2A3D; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .savings p { font-size:12.5px; color:#B7C0D1; line-height:1.35; flex:1; }
+  .savings p b { color:#FFFFFF; }
+  .savings .chev { color:#5B6577; font-size:16px; }
+
+  /* Section header */
+  .sec-head { display:flex; align-items:center; justify-content:space-between; margin-top:24px; margin-bottom:10px; }
+  .sec-head h2 { font-size:19px; font-weight:800; }
+  .sec-head .link { font-size:12.5px; color:#8A93A6; font-weight:600; display:flex; align-items:center; gap:3px; }
+
+  /* Tabs */
+  .tabs { display:flex; gap:8px; overflow-x:auto; padding-bottom:2px; }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab {
+    flex-shrink:0; padding:8px 14px; border-radius:18px; font-size:12.5px; font-weight:700;
+    background:#141B29; color:#8A93A6; border:1px solid #232D3F; white-space:nowrap;
+  }
+  .tab.active { background:#FFFFFF; color:#0A0E17; border-color:#FFFFFF; }
+
+  .helper-text { font-size:12px; color:#6B7486; margin-top:12px; line-height:1.4; }
+
+  /* Product cards */
+  .card {
+    display:flex; gap:12px; background:#141B29; border:1px solid #1E2738;
+    border-radius:16px; padding:12px; margin-top:12px; align-items:stretch;
+  }
+  .thumb {
+    width:84px; height:96px; border-radius:12px; flex-shrink:0; position:relative;
+    display:flex; align-items:flex-end; padding:8px; overflow:hidden;
+  }
+  .thumb.verified-thumb { background:linear-gradient(160deg,#1F3B5C,#0D1B2E); }
+  .thumb.boost-thumb { background:linear-gradient(160deg,#3A2A1F,#1A130D); }
+  .thumb .badge-tag {
+    position:absolute; top:6px; left:6px; font-size:9px; font-weight:800;
+    padding:3px 6px; border-radius:6px; letter-spacing:0.3px;
+  }
+  .badge-tag.blue { background:#2DE1C2; color:#04241D; }
+  .badge-tag.scarce { background:#FF6B57; color:#2B0E08; }
+  .thumb .icon-big { font-size:30px; }
+  .thumb .thumb-label { font-size:10.5px; font-weight:700; color:#EAEFF6; line-height:1.2; }
+
+  .card-info { flex:1; display:flex; flex-direction:column; }
+  .card-info .name { font-size:13.5px; font-weight:700; color:#FFFFFF; line-height:1.3; }
+  .card-info .desc { font-size:11.5px; color:#8A93A6; margin-top:2px; }
+  .card-info .price-line { display:flex; align-items:baseline; gap:6px; margin-top:8px; }
+  .card-info .price-line .now { font-size:15px; font-weight:800; color:#FFFFFF; }
+  .card-info .price-line .old { font-size:11.5px; color:#5B6577; text-decoration:line-through; }
+  .card-info .trial { font-size:10.5px; color:#2DE1C2; font-weight:600; margin-top:2px; }
+  .buy-btn {
+    margin-top:auto; align-self:flex-start; background:#2DE1C2; color:#04241D;
+    border:none; padding:8px 20px; border-radius:12px; font-size:13px; font-weight:800;
+  }
+
+  /* Help FAB - unobtrusive, corner, no overlap */
+  .fab {
+    position:absolute; right:16px; bottom:20px;
+    width:46px; height:46px; border-radius:50%;
+    background:linear-gradient(135deg,#8B5CF6,#EC4899);
+    display:flex; align-items:center; justify-content:center;
+    font-size:19px; box-shadow:0 8px 18px rgba(139,92,246,0.4);
+  }
+</style>
+</head>
+<body>
+<div class="screen">
+  <div class="status">
+    <span>09:30 PM</span>
+    <div class="icons"><span>􀙇</span><span>􀙇</span><span>5G</span><span>🔋</span></div>
+  </div>
+
+  <div class="topbar">
+    <div class="wallet-chips">
+      <div class="chip"><span class="dot coin">◆</span>47,5</div>
+      <div class="chip"><span class="dot boost">🚀</span>8</div>
+    </div>
+    <button class="withdraw-btn">Вывести</button>
+  </div>
+
+  <div class="content">
+
+    <div class="hero">
+      <span class="hero-eyebrow">🔥 Хит продаж</span>
+      <div class="hero-badge">✅</div>
+      <h1>Получи Верификацию</h1>
+      <p>Синяя галочка + приоритет в поиске. Первым делом заметят тебя.</p>
+      <div class="price-row">
+        <span class="free">3 дня бесплатно</span>
+        <span class="then">→ затем $2,49/нед</span>
+      </div>
+      <button class="hero-cta">Попробовать бесплатно →</button>
+    </div>
+
+    <div class="savings">
+      <div class="ic">💰</div>
+      <p>Буст не окупится за 28 дней? <b>Вернём в 2х размере.</b> Гарантия без риска.</p>
+      <span class="chev">›</span>
+    </div>
+
+    <div class="sec-head">
+      <h2>Маркет</h2>
+      <span class="link">История покупок ›</span>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active">Всё</div>
+      <div class="tab">Заработать</div>
+      <div class="tab">Стать известным</div>
+      <div class="tab">Получить буст</div>
+    </div>
+    <p class="helper-text">Всё в одном месте — не пропусти лимитированные предложения на бусты.</p>
+
+    <div class="card">
+      <div class="thumb verified-thumb">
+        <span class="badge-tag blue">VERIFIED</span>
+        <span class="icon-big" style="position:absolute; top:30px; left:27px;">✅</span>
+        <span class="thumb-label">Значок + приоритет поиска</span>
+      </div>
+      <div class="card-info">
+        <div class="name">Верификация профиля</div>
+        <div class="desc">Значок + приоритет в поиске</div>
+        <div class="price-line"><span class="now">$6,99</span></div>
+        <div class="trial">3 дня бесплатно, затем $2,49/нед</div>
+        <button class="buy-btn">Купить</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb boost-thumb">
+        <span class="badge-tag scarce">ОСТАЛОСЬ 2 ШТ</span>
+        <span class="icon-big" style="position:absolute; top:30px; left:27px;">🚀</span>
+        <span class="thumb-label">Стандартный буст</span>
+      </div>
+      <div class="card-info">
+        <div class="name">Стандартный буст</div>
+        <div class="desc">Заработай до $10</div>
+        <div class="price-line"><span class="now">$3,09</span><span class="old">$4,49</span></div>
+        <div class="trial">&nbsp;</div>
+        <button class="buy-btn">Купить</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="fab">💬</div>
+</div>
+</body>
+</html>
